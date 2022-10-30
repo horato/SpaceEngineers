@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32929.386
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiningController", "MiningController\MiningController.csproj", "{A5171325-B770-4BD5-A6AC-157F83F04899}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerConsumption", "PowerConsumption\PowerConsumption.csproj", "{25F88C6A-DE3D-4A97-8611-CEAC47E1F0A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirLockControl", "AirLockControl\AirLockControl.csproj", "{1EF39C0C-5845-4881-82CA-04F04750B066}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiningPrinterController", "MiningPrinterController\MiningPrinterController.csproj", "{3E15B969-626A-4683-B0E0-00524696FFB2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A5171325-B770-4BD5-A6AC-157F83F04899}.Debug|x64.ActiveCfg = Debug|x64
+		{A5171325-B770-4BD5-A6AC-157F83F04899}.Debug|x64.Build.0 = Debug|x64
+		{25F88C6A-DE3D-4A97-8611-CEAC47E1F0A2}.Debug|x64.ActiveCfg = Debug|x64
+		{25F88C6A-DE3D-4A97-8611-CEAC47E1F0A2}.Debug|x64.Build.0 = Debug|x64
+		{1EF39C0C-5845-4881-82CA-04F04750B066}.Debug|x64.ActiveCfg = Debug|x64
+		{1EF39C0C-5845-4881-82CA-04F04750B066}.Debug|x64.Build.0 = Debug|x64
+		{3E15B969-626A-4683-B0E0-00524696FFB2}.Debug|x64.ActiveCfg = Debug|x64
+		{3E15B969-626A-4683-B0E0-00524696FFB2}.Debug|x64.Build.0 = Debug|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BE61570B-07E4-48F8-8DC8-56586B61E28F}
+	EndGlobalSection
+EndGlobal

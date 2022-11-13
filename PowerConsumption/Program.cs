@@ -24,7 +24,8 @@ namespace IngameScript
 	{
 		private readonly MyDefinitionId _electricityDefinition = MyDefinitionId.Parse("MyObjectBuilder_GasProperties/Electricity");
 		private readonly MyDefinitionId _hydrogenDefinition = MyDefinitionId.Parse("MyObjectBuilder_GasProperties/Hydrogen");
-		private bool _displayElectricity = true;
+		private readonly MyDefinitionId _oxygenDefinition = MyDefinitionId.Parse("MyObjectBuilder_GasProperties/Oxygen");
+		private ResourceType _resourceType = ResourceType.Electricity;
 
 		public Program()
 		{
@@ -34,14 +35,26 @@ namespace IngameScript
 		public void Main(string argument, UpdateType updateSource)
 		{
 			if (argument == "ELECTRICITY")
-				_displayElectricity = true;
+				_resourceType = ResourceType.Electricity;
 			else if (argument == "HYDROGEN")
-				_displayElectricity = false;
+				_resourceType = ResourceType.Hydrogen;
+			else if (argument == "OXYGEN")
+				_resourceType = ResourceType.Oxygen;
 
-			if (_displayElectricity)
-				ExecutePowerConsumption(_electricityDefinition, "MW");
-			else
-				ExecutePowerConsumption(_hydrogenDefinition, "l/h");
+			switch (_resourceType)
+			{
+				case ResourceType.Electricity:
+					ExecutePowerConsumption(_electricityDefinition, "MW");
+					break;
+				case ResourceType.Hydrogen:
+					ExecutePowerConsumption(_hydrogenDefinition, "l/s");
+					break;
+				case ResourceType.Oxygen:
+					ExecutePowerConsumption(_oxygenDefinition, "l/s");
+					break;
+				default:
+					throw new InvalidOperationException($"Unknown resource type {_resourceType}");
+			}
 		}
 
 		private void ExecutePowerConsumption(MyDefinitionId resourceType, string unit)
@@ -56,14 +69,13 @@ namespace IngameScript
 			}
 
 			var sb = new StringBuilder();
-
-			sb.AppendLine("Current:");
+			sb.AppendLine($"{_resourceType} Current:");
 			sb.AppendLine($"+{Math.Round(blockValues.Sum(x => x.Value.ProduceCurrent), 2)} {unit}");
 			sb.AppendLine($"-{Math.Round(blockValues.Sum(x => x.Value.ConsumeCurrent), 2)} {unit}");
 
 			sb.AppendLine();
 
-			sb.AppendLine("Max:");
+			sb.AppendLine($"{_resourceType} Max:");
 			sb.AppendLine($"+{Math.Round(blockValues.Sum(x => x.Value.ProduceMax), 2)} {unit}");
 			sb.AppendLine($"-{Math.Round(blockValues.Sum(x => x.Value.ConsumeMax), 2)} {unit}");
 
@@ -93,14 +105,13 @@ namespace IngameScript
 				return;
 			if (sink.AcceptedResources.All(x => x != resourceType))
 				return;
-			if (block is IMyGasTank || block is IMyBatteryBlock || block is IMyThrust)
-				return;
 			if (!blockValues.ContainsKey(block.EntityId))
 				blockValues.Add(block.EntityId, new BlockInfo(block.CustomName));
 
+			var onlyCurrent = block is IMyGasTank || block is IMyBatteryBlock || block is IMyThrust;
 			var blockValue = blockValues[block.EntityId];
 			var current = sink.CurrentInputByType(resourceType);
-			var max = sink.MaxRequiredInputByType(resourceType);
+			var max = onlyCurrent ? 0 : sink.MaxRequiredInputByType(resourceType);
 			blockValue.AddConsume(current, max);
 		}
 
@@ -111,14 +122,13 @@ namespace IngameScript
 				return;
 			if (source.ResourceTypes.All(x => x != resourceType))
 				return;
-			if (block is IMyGasTank || block is IMyBatteryBlock || block is IMyThrust)
-				return;
 			if (!blockValues.ContainsKey(block.EntityId))
 				blockValues.Add(block.EntityId, new BlockInfo(block.CustomName));
 
+			var onlyCurrent = block is IMyGasTank || block is IMyBatteryBlock || block is IMyThrust;
 			var blockValue = blockValues[block.EntityId];
 			var current = source.CurrentOutputByType(resourceType);
-			var max = source.MaxOutputByType(resourceType);
+			var max = onlyCurrent ? 0 : source.MaxOutputByType(resourceType);
 			blockValue.AddProduce(current, max);
 		}
 
@@ -146,6 +156,13 @@ namespace IngameScript
 				ConsumeCurrent += current;
 				ConsumeMax += max;
 			}
+		}
+
+		private enum ResourceType
+		{
+			Electricity = 1,
+			Hydrogen = 2,
+			Oxygen = 3
 		}
 	}
 }
